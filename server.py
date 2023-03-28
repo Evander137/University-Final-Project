@@ -6,15 +6,11 @@ from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
+from BackendFiles.database import *
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:rootroot@localhost/szakdolgozat"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-app.config["JWT_SECRET_KEY"] = "please-remember-to-change-me"
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+app.config.from_pyfile('BackendFiles/config.py')
 
 jwt = JWTManager(app)
 
@@ -22,42 +18,8 @@ jwt = JWTManager(app)
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
-
-
-class Events(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-
-    def __init__(self, name):
-        self.name = name
-
-
-class EventsSchema(ma.Schema):
-    class Meta:
-        fields = ("id", "name")
-
-
-class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100))
-    password = db.Column(db.String(100))
-
-    def __init__(self, email, password):
-        self.email = email
-        self.password = password
-
-
-class UsersSchema(ma.Schema):
-    class Meta:
-        fields = ("id", "email", "password")
-
-
-events_schema = EventsSchema()
-events_schema_many = EventsSchema(many=True)
-users_schema = UsersSchema()
-users_schema_many = UsersSchema(many=True)
+db.init_app(app)
+ma.init_app(app)
 
 
 @app.after_request
@@ -74,7 +36,7 @@ def refresh_expiring_jwts(response):
                 response.data = json.dumps(data)
         return response
     except (RuntimeError, KeyError):
-        # Case where there is not a valid JWT. Just return the original respone
+        # Case where there is not a valid JWT. Just return the original response
         return response
 
 
@@ -98,6 +60,7 @@ def logout():
 
 
 @app.route("/get", methods=["GET"])
+@jwt_required()
 def hello():
     all_events = Events.query.all()
     results = events_schema_many.dump(all_events)
@@ -110,13 +73,25 @@ def get_event(id):
     return events_schema.jsonify(event)
 
 
-@app.route('/add', methods=["POST"])
+# @app.route('/add', methods=["POST"])
+# def add_event():
+#     data = request.get_json()["name"]
+#     event = Events(data)
+#     db.session.add(event)
+#     db.session.commit()
+#     return events_schema.jsonify(event)
+
+
+@app.route("/add", methods=["POST"])
 def add_event():
-    data = request.get_json()["name"]
-    event = Events(data)
+    data = request.get_json()
+    event = Events(name=data["name"], description=data["description"], location=data["location"],
+                   type=data["type"], date=data["date"], startTime=data["startTime"], endTime=data["endTime"],
+                   isFinal=data["isFinal"], institution_id=None)
     db.session.add(event)
     db.session.commit()
-    return events_schema.jsonify(event)
+    response = events_schema.jsonify(event)
+    return response
 
 
 @app.route('/delete/<id>', methods=["DELETE"])

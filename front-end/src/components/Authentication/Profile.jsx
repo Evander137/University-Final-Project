@@ -32,7 +32,7 @@ function Profile(props) {
     return (
         <div className="Profile">
             <div>
-                <Link to="/">CLICK HERE TO CHAT</Link>
+                <Link to="/chat">CLICK HERE TO CHAT</Link>
             </div>
             <p>To get your profile details: </p><button onClick={getData}>Click me</button>
             {profileData && <div>
