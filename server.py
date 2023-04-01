@@ -94,24 +94,30 @@ def add_event():
     return response
 
 
+@app.route('/update/<id>', methods=["PUT"])
+def update_event(id):
+    data = request.get_json()
+    event = Events.query.get(id)
+    event.description = data["description"]
+    event.name = data["name"]
+    event.location = data["location"]
+    event.type = data["type"]
+    event.date = data["date"]
+    event.startTime = data["startTime"]
+    event.endTime = data["endTime"]
+    event.isFinal = data["isFinal"]
+    db.session.commit()
+    response = events_schema.jsonify(event)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
 @app.route('/delete/<id>', methods=["DELETE"])
 def delete_event(id):
     event = Events.query.get(id)
     db.session.delete(event)
     db.session.commit()
     return events_schema.jsonify(event)
-
-
-@app.route('/update/<id>', methods=["PUT"])
-def update_event(id):
-    # data = request.get_json()["name"]
-    event = Events.query.get(id)
-    name = request.json["name"]
-    event.name = name
-    db.session.commit()
-    response = events_schema.jsonify(event)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
 
 
 @app.route("/http-call")

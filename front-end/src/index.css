@@ -18,3 +18,20 @@ ul {
   align-items: center;
   flex-direction: column;
 }
+
+.calendar-day th {
+  width: 150px;
+  height: 40px;
+  vertical-align: top;
+}
+
+.calendar-day td {
+  width: 150px;
+  height: 120px;
+  vertical-align: top;
+  text-align: left;
+}
+
+.leftFloat {
+  float: left;
+}

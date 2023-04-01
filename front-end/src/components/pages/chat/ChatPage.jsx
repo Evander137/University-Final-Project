@@ -5,7 +5,7 @@ import { io } from "socket.io-client"
 // import Test from './test'
 import WebSocketCall from "./components/WebSocketCall"
 
-function Chat() {
+function ChatPage() {
 
     const [socketInstance, setSocketInstance] = useState("")
     const [loading, setLoading] = useState(true)
@@ -69,4 +69,4 @@ function Chat() {
     )
 }
 
-export default Chat
+export default ChatPage

@@ -5,7 +5,7 @@ import Profile from './components/authentication/Profile'
 import Header from './components/authentication/Header'
 import useToken from './components/authentication/useToken'
 import Login from "./components/authentication/Login"
-import Chat from "./components/pages/chat/ChatPage"
+import ChatPage from "./components/pages/chat/ChatPage"
 import CalendarPage from "./components/pages/calendar/CalendarPage"
 import 'bootstrap/dist/css/bootstrap.css'
 
@@ -23,7 +23,7 @@ function App() {
             <>
               <Header token={removeToken} />
               <Routes>
-                <Route exact path="/chat" element={<Chat />}></Route>
+                <Route exact path="/chat" element={<ChatPage />}></Route>
                 <Route exact path="/profile" element={<Profile token={token} setToken={setToken} />}></Route>
                 <Route exact path="/calendar" element={<CalendarPage token={token} setToken={setToken} />}></Route>
               </Routes>

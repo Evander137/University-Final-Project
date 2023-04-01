@@ -2,17 +2,17 @@ import React, { useState } from "react"
 import { Modal, Button } from "react-bootstrap"
 import APIServices from "./APIServices"
 
-export default function AddEvent(props) {
+export default function ShowAndUpdateEvent(props) {
     const [showModal, setShow] = useState(false)
 
-    const [name, setName] = useState("")
-    const [description, setDescription] = useState("")
-    const [location, setLocation] = useState("")
-    const [type, setType] = useState("")
-    const [date, setDate] = useState("")
-    const [startTime, setStartTime] = useState("")
-    const [endTime, setEndTime] = useState("")
-    const [final, setFinal] = useState(false)
+    const [name, setName] = useState(props.event.name)
+    const [description, setDescription] = useState(props.event.description)
+    const [location, setLocation] = useState(props.event.location)
+    const [type, setType] = useState(props.event.type)
+    const [date, setDate] = useState(props.event.date)
+    const [startTime, setStartTime] = useState(props.event.startTime)
+    const [endTime, setEndTime] = useState(props.event.endTime)
+    const [final, setFinal] = useState(props.event.isFinal)
 
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
@@ -21,13 +21,14 @@ export default function AddEvent(props) {
     const handleLocationChange = e => setLocation(e.target.value)
     const handleTypeChange = e => setType(e.target.value)
     const handleDateChange = e => setDate(e.target.value)
-    const handleStartTimeChange = (e) => { setStartTime(e.target.value); console.log(e.target.value) }
+    const handleStartTimeChange = e => setStartTime(e.target.value)
     const handleEndTimeChange = e => setEndTime(e.target.value)
     const handleFinalChange = e => setFinal(e.target.checked)
 
     const handleSubmit = (e) => {
-        console.log(name, description, location, type, date, startTime, endTime, final)
-        APIServices.AddEvent({
+        // console.log(name, description, location, type, date, startTime, endTime, final)
+
+        APIServices.UpdateEvent(props.event.id, {
             "name": name,
             "description": description,
             "type": type,
@@ -35,31 +36,37 @@ export default function AddEvent(props) {
             "location": location,
             "startTime": startTime,
             "endTime": endTime,
-            "isFinal": final,
-            "institution_id": 1
+            "isFinal": final
         })
             .then(res => {
                 console.log(res)
-                alert("Sikeresen létrehozta az eseményt!")
-                handleClose()
+                alert("Sikeresen frissítette az eseményt!")
                 props.getEvents()
+                handleClose()
             })
             .catch(err => console.log(err))
+
+    }
+
+    const handleDelete = () => {
+        window.confirm("Biztos törölné szeretnéd az eseményt?") &&
+            APIServices.DeleteEvent(props.event.id).then(res => {
+                console.log(res)
+                // alert("Sikeresen törölte az eseményt!")
+                props.getEvents()
+                handleClose()
+            })
+                .catch(err => console.log(err))
     }
 
     return (
         <>
-            <div
-            // className="d-flex align-items-center justify-content-center"
-            // style={{ height: "100vh" }}
-            >
-                <Button variant="primary" onClick={handleShow}>
-                    Új esemény létrehozása
-                </Button>
+            <div>
+                <a href="#" onClick={handleShow} className="link">{props.event.name}</a>
             </div>
             <Modal show={showModal} onHide={handleClose} backdrop="static" size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Új esemény</Modal.Title>
+                    <Modal.Title>Esemény frissítése</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="mb-3">
@@ -78,7 +85,7 @@ export default function AddEvent(props) {
                     </div>
                     <hr />
                     <label htmlFor="addEventType" className="form-label">Típus</label>
-                    <select id="addEventType" onChange={handleTypeChange} className="form-select form-select-sm" aria-label=".form-select-sm example">
+                    <select defaultValue={type} id="addEventType" onChange={handleTypeChange} className="form-select form-select-sm" aria-label=".form-select-sm example">
                         <option defaultValue="Kúltúra">Kúltúra</option>
                         <option defaultValue="Zene">Zene</option>
                         <option defaultValue="Képzőművészet">Képzőművészet</option>
@@ -105,8 +112,11 @@ export default function AddEvent(props) {
                     <Button variant="secondary" onClick={handleClose}>
                         Bezárás
                     </Button>
+                    <Button variant="danger" onClick={handleDelete}>
+                        Esemény törlése
+                    </Button>
                     <Button variant="primary" onClick={handleSubmit}>
-                        Esemény létrehozása
+                        Esemény frissítése
                     </Button>
                 </Modal.Footer>
             </Modal>
