@@ -37,17 +37,17 @@ class EventsSchema(ma.Schema):
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100))
+    username = db.Column(db.String(100))
     password = db.Column(db.String(100))
 
-    def __init__(self, email, password):
-        self.email = email
+    def __init__(self, username, password):
+        self.username = username
         self.password = password
 
 
 class UsersSchema(ma.Schema):
     class Meta:
-        fields = ("id", "email", "password")
+        fields = ("id", "username", "password")
 
 
 events_schema = EventsSchema()

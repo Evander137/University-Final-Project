@@ -16,10 +16,12 @@ export default function CalendarPage(props) {
             }
         })
             .then((response) => {
+                console.log(response)
                 const res = response.data
                 // console.log(res)
-                res.access_token && props.setToken(res.access_token)
+                // res.access_token && props.setToken(res.access_token)
                 setEvents(res)
+                console.log(events)
             }).catch((error) => {
                 if (error.response) {
                     console.log(error.response)
@@ -30,31 +32,22 @@ export default function CalendarPage(props) {
     }
 
     useEffect(() => {
+        console.log("useeffect")
+        console.log(props.userId)
+        console.log(props.username)
+        console.log(props.token)
         getData()
     }, [])
-
-    const renderEvents = () => {
-        if (events) {
-            return events.map((event, index) => {
-                return (
-                    <div key={event.id}>
-                        {event.name} - {event.date} - {event.type} - {event.location} - {event.date} - {event.startTime} - {event.endTime}
-                        {/* <Link to={`/events/${event._id}`}>
-                            <button>View</button>
-                        </Link> */}
-                    </div>
-                )
-            })
-        }
-    }
 
     return (
         <div>
             <Link to="/chat">CLICK HERE TO CHAT</Link>
-            {/* {renderEvents()} */}
             <Calendar
                 events={events}
                 getEvents={getData}
+                token={props.token}
+                setToken={props.setToken}
+                userId={props.userId}
             />
         </div>
     )

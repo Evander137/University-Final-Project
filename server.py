@@ -42,13 +42,30 @@ def refresh_expiring_jwts(response):
 
 @app.route('/token', methods=["POST"])
 def create_token():
-    email = request.json.get("email", None)
+    username = request.json.get("username", None)
     password = request.json.get("password", None)
-    if email != "asd" or password != "asd":
-        return {"msg": "Wrong email or password"}, 401
+    print(username, password)
 
-    access_token = create_access_token(identity=email)
-    response = {"access_token": access_token}
+    # ? 1. Lekérem a megfelelő e-mailhez tartozó rekordot
+    all_users = Users.query.all()
+    users = users_schema_many.dump(all_users)
+    user = 0
+    for i in users:
+        if i["username"] == username:
+            if i["password"] == password:
+                user = i
+    # ? 2. Összehasonlítom a hashelt beírt jelszót a lekért jelszóhoz
+    # ? 3. Responseban visszaadom a userId-t és az usernamet is nem csak az access tokent
+
+    if user == 0:
+        return {"msg": "Wrong username or password"}, 401
+
+    access_token = create_access_token(identity=username)
+    response = {
+        "access_token": access_token,
+        "id": user["id"],
+        "username": user["username"]
+    }
     return response
 
 
@@ -68,26 +85,19 @@ def hello():
 
 
 @app.route("/get/<id>", methods=["GET"])
+@jwt_required()
 def get_event(id):
     event = Events.query.get(id)
     return events_schema.jsonify(event)
 
 
-# @app.route('/add', methods=["POST"])
-# def add_event():
-#     data = request.get_json()["name"]
-#     event = Events(data)
-#     db.session.add(event)
-#     db.session.commit()
-#     return events_schema.jsonify(event)
-
-
 @app.route("/add", methods=["POST"])
+@jwt_required()
 def add_event():
     data = request.get_json()
     event = Events(name=data["name"], description=data["description"], location=data["location"],
                    type=data["type"], date=data["date"], startTime=data["startTime"], endTime=data["endTime"],
-                   isFinal=data["isFinal"], institution_id=None)
+                   isFinal=data["isFinal"], institution_id=data["institution_id"])
     db.session.add(event)
     db.session.commit()
     response = events_schema.jsonify(event)
@@ -95,6 +105,7 @@ def add_event():
 
 
 @app.route('/update/<id>', methods=["PUT"])
+@jwt_required()
 def update_event(id):
     data = request.get_json()
     event = Events.query.get(id)
@@ -113,6 +124,7 @@ def update_event(id):
 
 
 @app.route('/delete/<id>', methods=["DELETE"])
+@jwt_required()
 def delete_event(id):
     event = Events.query.get(id)
     db.session.delete(event)
@@ -129,7 +141,6 @@ def http_call():
 
 @socketio.on("connect")
 def connected():
-    """event listener when client connects to the server"""
     print(request.sid)
     print("client has connected")
     emit("connect", {"data": f"id: {request.sid} is connected"})
@@ -137,14 +148,15 @@ def connected():
 
 @socketio.on('data')
 def handle_message(data):
-    """event listener when client types a message"""
-    print("data from the front end: ", str(data))
-    emit("data", {'data': data, 'id': request.sid}, broadcast=True)
+    print("data from the front end: ", str(data["message"]))
+    print(str(data["username"]), str(data["userId"]))
+    emit("data", {'username': data["username"], 'message': data["message"],
+         'id': request.sid, 'userId': data["userId"]}, broadcast=True)
+    # emit("data", {'data': data, 'id': request.sid}, broadcast=True)
 
 
 @socketio.on("disconnect")
 def disconnected():
-    """event listener when client disconnects to the server"""
     print("user disconnected")
     emit("disconnect", f"user {request.sid} disconnected", broadcast=True)
 

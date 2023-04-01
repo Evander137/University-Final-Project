@@ -5,14 +5,6 @@ import ShowAndUpdateEvent from './ShowAndUpdateEvent'
 import AddEvent from './AddEvent'
 
 export default function Calendar(props) {
-    // const [renderValue, setRenderValue] = useState(0)
-
-    // const forceUpdate = () => {
-    //     console.log("forceUpdate")
-    //     setRenderValue(renderValue => renderValue + 1)
-    //     props.getEvents()
-    // }
-
     const [dateObject, setDateObject] = useState(moment())
     const [showMonthTable, setShowMonthTable] = useState(false)
     const [showYearTable, setShowYearTable] = useState(false)
@@ -29,7 +21,6 @@ export default function Calendar(props) {
     }
 
     const setYear = (year) => {
-        console.log(year)
         let dateObj = Object.assign({}, dateObject)
         dateObj = moment(dateObj).set("year", year)
         setDateObject(dateObj)
@@ -82,7 +73,7 @@ export default function Calendar(props) {
         }
         let days = []
         const currentDate = moment()
-        console.log(dateObject)
+        // console.log(dateObject)
         for (let d = 1; d <= daysInMonth(); d++) {
             if (props.events !== null) {
                 let dailyEvents = []
@@ -98,7 +89,10 @@ export default function Calendar(props) {
                             <>
                                 <ShowAndUpdateEvent
                                     event={props.events[i]}
+                                    userId={props.userId}
                                     getEvents={props.getEvents}
+                                    token={props.token}
+                                    setToken={props.setToken}
                                 />
                             </>)
                     }
@@ -329,6 +323,9 @@ export default function Calendar(props) {
             {renderCalendar()}
             <AddEvent
                 getEvents={props.getEvents}
+                token={props.token}
+                setToken={props.setToken}
+                userId={props.userId}
             />
         </div>
     )

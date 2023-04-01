@@ -15,7 +15,8 @@ function Profile(props) {
         })
             .then((response) => {
                 const res = response.data
-                res.access_token && props.setToken(res.access_token)
+                console.log(res.access_token)
+                // res.access_token && props.setToken(res.access_token)
                 setProfileData(({
                     profile_name: res.name,
                     about_me: res.about

@@ -4,7 +4,7 @@ import axios from "axios"
 function Login(props) {
 
     const [loginForm, setloginForm] = useState({
-        email: "",
+        username: "",
         password: ""
     })
 
@@ -13,12 +13,14 @@ function Login(props) {
             method: "POST",
             url: "http://localhost:5001/token",
             data: {
-                email: loginForm.email,
+                username: loginForm.username,
                 password: loginForm.password
             }
         })
             .then((response) => {
-                props.setToken(response.data.access_token)
+                props.setToken(response.data.access_token, response.data.id, response.data.username)
+                // console.log(response.data)
+
             }).catch((error) => {
                 if (error.response) {
                     console.log(error.response)
@@ -28,7 +30,7 @@ function Login(props) {
             })
 
         setloginForm(({
-            email: "",
+            username: "",
             password: ""
         }))
 
@@ -48,16 +50,16 @@ function Login(props) {
             <h1>Login</h1>
             <form className="login">
                 <input onChange={handleChange}
-                    type="email"
-                    text={loginForm.email}
-                    name="email"
-                    placeholder="Email"
-                    value={loginForm.email} />
+                    type="username"
+                    text={loginForm.username}
+                    name="username"
+                    placeholder="Felhasználónév"
+                    value={loginForm.username} />
                 <input onChange={handleChange}
                     type="password"
                     text={loginForm.password}
                     name="password"
-                    placeholder="Password"
+                    placeholder="Jelszó"
                     value={loginForm.password} />
 
                 <button onClick={logMeIn}>Submit</button>

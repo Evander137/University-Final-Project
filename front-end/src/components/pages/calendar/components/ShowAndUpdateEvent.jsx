@@ -26,8 +26,6 @@ export default function ShowAndUpdateEvent(props) {
     const handleFinalChange = e => setFinal(e.target.checked)
 
     const handleSubmit = (e) => {
-        // console.log(name, description, location, type, date, startTime, endTime, final)
-
         APIServices.UpdateEvent(props.event.id, {
             "name": name,
             "description": description,
@@ -37,9 +35,11 @@ export default function ShowAndUpdateEvent(props) {
             "startTime": startTime,
             "endTime": endTime,
             "isFinal": final
-        })
-            .then(res => {
-                console.log(res)
+        }, props.token)
+            .then(response => {
+                console.log(response)
+                // const res = response.data
+                // res.access_token && props.setToken(res.access_token)
                 alert("Sikeresen frissítette az eseményt!")
                 props.getEvents()
                 handleClose()
@@ -50,8 +50,10 @@ export default function ShowAndUpdateEvent(props) {
 
     const handleDelete = () => {
         window.confirm("Biztos törölné szeretnéd az eseményt?") &&
-            APIServices.DeleteEvent(props.event.id).then(res => {
-                console.log(res)
+            APIServices.DeleteEvent(props.event.id, props.token).then(response => {
+                console.log(response)
+                // const res = response.data
+                // res.access_token && props.setToken(res.access_token)
                 // alert("Sikeresen törölte az eseményt!")
                 props.getEvents()
                 handleClose()
@@ -71,51 +73,51 @@ export default function ShowAndUpdateEvent(props) {
                 <Modal.Body>
                     <div className="mb-3">
                         <label htmlFor="addEventName" className="form-label">Név</label>
-                        <input value={name} onChange={handleNameChange} type="text" className="form-control" id="addEventName" placeholder="" />
+                        <input disabled={String(props.event.institution_id) !== String(props.userId)} value={name} onChange={handleNameChange} type="text" className="form-control" id="addEventName" placeholder="" />
                     </div>
                     <hr />
                     <div className="mb-3">
                         <label htmlFor="addEventDescription" className="form-label">Leírás</label>
-                        <textarea value={description} onChange={handleDescriptionChange} className="form-control" id="addEventDescription" rows="3"></textarea>
+                        <textarea disabled={String(props.event.institution_id) !== String(props.userId)} value={description} onChange={handleDescriptionChange} className="form-control" id="addEventDescription" rows="3"></textarea>
                     </div>
                     <hr />
                     <div className="mb-3">
                         <label htmlFor="addEventLocation" className="form-label">Helyszín</label>
-                        <input value={location} onChange={handleLocationChange} type="text" className="form-control" id="addEventLocation" placeholder="" />
+                        <input disabled={String(props.event.institution_id) !== String(props.userId)} value={location} onChange={handleLocationChange} type="text" className="form-control" id="addEventLocation" placeholder="" />
                     </div>
                     <hr />
                     <label htmlFor="addEventType" className="form-label">Típus</label>
-                    <select defaultValue={type} id="addEventType" onChange={handleTypeChange} className="form-select form-select-sm" aria-label=".form-select-sm example">
+                    <select disabled={String(props.event.institution_id) !== String(props.userId)} defaultValue={type} id="addEventType" onChange={handleTypeChange} className="form-select form-select-sm" aria-label=".form-select-sm example">
                         <option defaultValue="Kúltúra">Kúltúra</option>
                         <option defaultValue="Zene">Zene</option>
                         <option defaultValue="Képzőművészet">Képzőművészet</option>
                     </select>
                     <hr />
                     <label htmlFor="addEventDate" className="form-label">Dátum</label>
-                    <input value={date} onChange={handleDateChange} className="form-control" id="addEventDate" type="date" />
+                    <input disabled={String(props.event.institution_id) !== String(props.userId)} value={date} onChange={handleDateChange} className="form-control" id="addEventDate" type="date" />
                     <hr />
                     <div className="row">
                         <div className="col-auto">
                             <label htmlFor="addEventStartTime" className="form-label">Kezdés időpontja</label>
-                            <input value={startTime} onChange={handleStartTimeChange} id="addEventStartTime" className="form-control" type="time" />
+                            <input disabled={String(props.event.institution_id) !== String(props.userId)} value={startTime} onChange={handleStartTimeChange} id="addEventStartTime" className="form-control" type="time" />
                         </div>
                         <div className="col-auto">
                             <label htmlFor="addEventEndTime" className="form-label">Várható befejezés időpontja</label>
-                            <input value={endTime} onChange={handleEndTimeChange} id="addEventEndTime" className="form-control" type="time" />
+                            <input disabled={String(props.event.institution_id) !== String(props.userId)} value={endTime} onChange={handleEndTimeChange} id="addEventEndTime" className="form-control" type="time" />
                         </div>
                     </div>
                     <hr />
                     <label htmlFor="addEventFinal" className="form-label">Végleges-e az időpont</label>
-                    <input checked={final} onChange={handleFinalChange} id="addEventFinal" className="form-check-input" type="checkbox" />
+                    <input disabled={String(props.event.institution_id) !== String(props.userId)} checked={final} onChange={handleFinalChange} id="addEventFinal" className="form-check-input" type="checkbox" />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Bezárás
                     </Button>
-                    <Button variant="danger" onClick={handleDelete}>
+                    <Button variant="danger" onClick={handleDelete} disabled={String(props.event.institution_id) !== String(props.userId)}>
                         Esemény törlése
                     </Button>
-                    <Button variant="primary" onClick={handleSubmit}>
+                    <Button variant="primary" onClick={handleSubmit} disabled={String(props.event.institution_id) !== String(props.userId)}>
                         Esemény frissítése
                     </Button>
                 </Modal.Footer>

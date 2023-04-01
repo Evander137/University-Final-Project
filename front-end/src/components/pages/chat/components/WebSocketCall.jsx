@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-export default function WebSocketCall({ socket }) {
+export default function WebSocketCall({ socket, username, userId }) {
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([])
 
@@ -10,16 +10,23 @@ export default function WebSocketCall({ socket }) {
   }
 
   const handleSubmit = () => {
+    // console.log(username)
+    // console.log(userId)
     if (!message) {
       return
     }
-    socket.emit("data", message)
+    let msg = {
+      username: username,
+      userId: userId,
+      message: message,
+    }
+    socket.emit("data", msg)
     setMessage("")
   }
 
   useEffect(() => {
     socket.on("data", (data) => {
-      setMessages([...messages, data.data])
+      setMessages([...messages, { username: data.username, message: data.message }])
     })
     return () => {
       socket.off("data", () => {
@@ -28,16 +35,28 @@ export default function WebSocketCall({ socket }) {
     }
   }, [socket, messages])
 
+  const renderMessages = () => {
+    let msgs = []
+    let msgCnt = 0
+    for (let i = 0; i < messages.length; i++) {
+      // console.log(messages[i])
+      msgs.push(<><br /><span key={msgCnt}>{messages[i].username} - {messages[i].message}</span></>)
+      msgCnt += 1
+    }
+    return msgs
+  }
+
   return (
     <div>
       <h2>WebSocket Communication</h2>
       <input type="text" value={message} onChange={handleText} />
       <button onClick={handleSubmit}>submit</button>
-      <ul>
+      {renderMessages()}
+      {/* <ul>
         {messages.map((message, ind) => {
-          return <li key={ind}>{message}</li>
+          return <span key={ind}>{message.username} - {message.message}</span>
         })}
-      </ul>
+      </ul> */}
     </div>
   )
 }

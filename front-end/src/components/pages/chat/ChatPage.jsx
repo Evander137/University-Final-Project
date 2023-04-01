@@ -5,7 +5,7 @@ import { io } from "socket.io-client"
 // import Test from './test'
 import WebSocketCall from "./components/WebSocketCall"
 
-function ChatPage() {
+function ChatPage(props) {
 
     const [socketInstance, setSocketInstance] = useState("")
     const [loading, setLoading] = useState(true)
@@ -48,9 +48,6 @@ function ChatPage() {
             <div>
                 <Link to="/calendar">CLICK HERE TO SEE THE CALENDAR</Link>
             </div>
-            {/* <div>
-                <Test />
-            </div> */}
             <div>
                 {
                     !buttonStatus ? (
@@ -59,7 +56,7 @@ function ChatPage() {
                         <>
                             <button onClick={handleClick}>turn chat off</button>
                             <div className="line">
-                                {!loading && <WebSocketCall socket={socketInstance} />}
+                                {!loading && <WebSocketCall socket={socketInstance} userId={props.userId} username={props.username} />}
                             </div>
                         </>
                     )

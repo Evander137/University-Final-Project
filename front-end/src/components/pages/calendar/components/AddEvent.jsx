@@ -36,10 +36,12 @@ export default function AddEvent(props) {
             "startTime": startTime,
             "endTime": endTime,
             "isFinal": final,
-            "institution_id": 1
-        })
-            .then(res => {
-                console.log(res)
+            "institution_id": props.userId
+        }, props.token)
+            .then(response => {
+                console.log(response)
+                // const res = response.data
+                // res.access_token && props.setToken(res.access_token)
                 alert("Sikeresen létrehozta az eseményt!")
                 handleClose()
                 props.getEvents()
