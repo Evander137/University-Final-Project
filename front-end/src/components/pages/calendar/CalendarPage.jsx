@@ -21,7 +21,6 @@ export default function CalendarPage(props) {
                 // console.log(res)
                 // res.access_token && props.setToken(res.access_token)
                 setEvents(res)
-                console.log(events)
             }).catch((error) => {
                 if (error.response) {
                     console.log(error.response)
@@ -32,10 +31,6 @@ export default function CalendarPage(props) {
     }
 
     useEffect(() => {
-        console.log("useeffect")
-        console.log(props.userId)
-        console.log(props.username)
-        console.log(props.token)
         getData()
     }, [])
 

@@ -21,12 +21,11 @@ export default function AddEvent(props) {
     const handleLocationChange = e => setLocation(e.target.value)
     const handleTypeChange = e => setType(e.target.value)
     const handleDateChange = e => setDate(e.target.value)
-    const handleStartTimeChange = (e) => { setStartTime(e.target.value); console.log(e.target.value) }
+    const handleStartTimeChange = (e) => { setStartTime(e.target.value) }
     const handleEndTimeChange = e => setEndTime(e.target.value)
     const handleFinalChange = e => setFinal(e.target.checked)
 
     const handleSubmit = (e) => {
-        console.log(name, description, location, type, date, startTime, endTime, final)
         APIServices.AddEvent({
             "name": name,
             "description": description,

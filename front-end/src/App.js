@@ -11,25 +11,41 @@ import 'bootstrap/dist/css/bootstrap.css'
 
 function App() {
   const { token, id, username, removeToken, setToken } = useToken()
-
-  useEffect(() => {
-    console.log("useeffect")
-  }, [])
-
+  let className = ""
+  if (!token && token !== "" && token !== undefined)
+    className = 'App LoginMainDiv'
+  else
+    className = "App"
   return (
     <BrowserRouter>
-      <div className="App">
+      <div className={className}>
         {!token && token !== "" && token !== undefined ?
           <div>
             <Login setToken={setToken} />
           </div>
           : (
             <>
-              <Header token={removeToken} />
               <Routes>
-                <Route exact path="/chat" element={<ChatPage userId={id} username={username} token={token} />}></Route>
+                <Route exact path="/" element={
+                  <CalendarPage
+                    removeToken={removeToken}
+                    userId={id}
+                    username={username}
+                    token={token}
+                    setToken={setToken}
+                  />}>
+                </Route>
+
+                <Route exact path="/chat" element={
+                  <ChatPage
+                    removeToken={removeToken}
+                    userId={id}
+                    username={username}
+                    token={token}
+                  />}>
+                </Route>
+
                 <Route exact path="/profile" element={<Profile token={token} setToken={setToken} />}></Route>
-                <Route exact path="/calendar" element={<CalendarPage userId={id} username={username} token={token} setToken={setToken} />}></Route>
               </Routes>
             </>
           )}

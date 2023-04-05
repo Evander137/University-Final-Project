@@ -35,3 +35,8 @@ ul {
 .leftFloat {
   float: left;
 }
+
+.LoginMainDiv {
+  background-image: url("../images/veszprem.jpg");
+  background-size: cover;
+}

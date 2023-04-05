@@ -1,4 +1,5 @@
 import json
+import hashlib
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -42,25 +43,25 @@ def refresh_expiring_jwts(response):
 
 @app.route('/token', methods=["POST"])
 def create_token():
-    username = request.json.get("username", None)
-    password = request.json.get("password", None)
-    print(username, password)
+    usernameInput = request.json.get("username", None)
+    passwordInput = request.json.get("password", None)
+    print(usernameInput, passwordInput)
 
-    # ? 1. Lekérem a megfelelő e-mailhez tartozó rekordot
     all_users = Users.query.all()
     users = users_schema_many.dump(all_users)
     user = 0
     for i in users:
-        if i["username"] == username:
-            if i["password"] == password:
+        if i["username"] == usernameInput:
+            hashed_passwordInput = hashlib.sha256(
+                passwordInput.encode('utf-8')).hexdigest()
+            print(hashed_passwordInput)
+            if i["password"] == hashed_passwordInput:
                 user = i
-    # ? 2. Összehasonlítom a hashelt beírt jelszót a lekért jelszóhoz
-    # ? 3. Responseban visszaadom a userId-t és az usernamet is nem csak az access tokent
 
     if user == 0:
         return {"msg": "Wrong username or password"}, 401
 
-    access_token = create_access_token(identity=username)
+    access_token = create_access_token(identity=usernameInput)
     response = {
         "access_token": access_token,
         "id": user["id"],
@@ -78,7 +79,7 @@ def logout():
 
 @app.route("/get", methods=["GET"])
 @jwt_required()
-def hello():
+def get_events():
     all_events = Events.query.all()
     results = events_schema_many.dump(all_events)
     return jsonify(results)
@@ -132,6 +133,22 @@ def delete_event(id):
     return events_schema.jsonify(event)
 
 
+@app.route("/getUsers", methods=["GET"])
+@jwt_required()
+def get_users():
+    all_users = Users.query.all()
+    result = users_schema_many.dump(all_users)
+    return jsonify(result)
+
+
+@app.route("/getMessages", methods=["GET"])
+@jwt_required()
+def get_messages():
+    all_messages = Messages.query.all()
+    resultMessages = messages_schema_many.dump(all_messages)
+    return jsonify(resultMessages)
+
+
 @app.route("/http-call")
 def http_call():
     """return JSON with string data as the value"""
@@ -150,9 +167,14 @@ def connected():
 def handle_message(data):
     print("data from the front end: ", str(data["message"]))
     print(str(data["username"]), str(data["userId"]))
+
+    message = Messages(
+        institution_id=data["userId"], dateTime=data["datetime"], message=data["message"])
+    db.session.add(message)
+    db.session.commit()
+
     emit("data", {'username': data["username"], 'message': data["message"],
          'id': request.sid, 'userId': data["userId"]}, broadcast=True)
-    # emit("data", {'data': data, 'id': request.sid}, broadcast=True)
 
 
 @socketio.on("disconnect")

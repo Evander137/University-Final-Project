@@ -50,7 +50,26 @@ class UsersSchema(ma.Schema):
         fields = ("id", "username", "password")
 
 
+class Messages(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    institution_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    dateTime = db.Column(db.DateTime)
+    message = db.Column(db.String(1000))
+
+    def __init__(self, institution_id, dateTime, message):
+        self.institution_id = institution_id
+        self.dateTime = dateTime
+        self.message = message
+
+
+class MessagesSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "institution_id", "dateTime", "message")
+
+
 events_schema = EventsSchema()
 events_schema_many = EventsSchema(many=True)
 users_schema = UsersSchema()
 users_schema_many = UsersSchema(many=True)
+messages_schema = MessagesSchema()
+messages_schema_many = MessagesSchema(many=True)

@@ -1,3 +1,5 @@
+import axios from "axios"
+
 export default class APIServices {
 
     static GetEvents(token) {
@@ -49,6 +51,28 @@ export default class APIServices {
     static DeleteEvent(id, token) {
         return fetch(`http://localhost:5001/delete/${id}`, {
             method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token
+            }
+        })
+            .then(res => res.json())
+    }
+
+    static GetMessages(token) {
+        return fetch('http://localhost:5001/getMessages', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token
+            }
+        })
+            .then(res => res.json())
+    }
+
+    static GetUsers(token) {
+        return fetch('http://localhost:5001/getUsers', {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token

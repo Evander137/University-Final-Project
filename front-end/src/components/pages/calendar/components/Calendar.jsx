@@ -84,7 +84,6 @@ export default function Calendar(props) {
                     d <= 9 ? day = "0" + d : day = d
                     let dateString = dateObject.year() + "-" + month + "-" + day
                     if (props.events[i].date.toString() === dateString.toString()) {
-                        // ! Itt kell létrehozni a modalt meg a modalbuttont úgy, hogy az adatbázis is meg minden benne van
                         dailyEvents.push(
                             <>
                                 <ShowAndUpdateEvent
