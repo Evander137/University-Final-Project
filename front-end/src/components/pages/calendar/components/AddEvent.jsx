@@ -54,7 +54,7 @@ export default function AddEvent(props) {
             // className="d-flex align-items-center justify-content-center"
             // style={{ height: "100vh" }}
             >
-                <Button variant="primary" onClick={handleShow}>
+                <Button variant="dark" onClick={handleShow} className="mb-4 mt-2">
                     Új esemény létrehozása
                 </Button>
             </div>
@@ -80,9 +80,17 @@ export default function AddEvent(props) {
                     <hr />
                     <label htmlFor="addEventType" className="form-label">Típus</label>
                     <select id="addEventType" onChange={handleTypeChange} className="form-select form-select-sm" aria-label=".form-select-sm example">
-                        <option defaultValue="Kúltúra">Kúltúra</option>
-                        <option defaultValue="Zene">Zene</option>
+                        <option defaultValue="Kúltúra">Irodalom</option>
+                        <option defaultValue="Zene">Zene, tánc</option>
                         <option defaultValue="Képzőművészet">Képzőművészet</option>
+                        <option defaultValue="Történelem, helytörténet">Történelem, helytörténet</option>
+                        <option defaultValue="Életmód">Életmód</option>
+                        <option defaultValue="Lelki egészség, pszichológia">Lelki egészség, pszichológia</option>
+                        <option defaultValue="Társadalomtudomány">Társadalomtudomány</option>
+                        <option defaultValue="Természettudomány">Természettudomány</option>
+                        <option defaultValue="Jótékonysági programok">Jótékonysági programok</option>
+                        <option defaultValue="Gyermekprogramok">Gyermekprogramok</option>
+                        <option defaultValue="Fesztiválok">Fesztiválok</option>
                     </select>
                     <hr />
                     <label htmlFor="addEventDate" className="form-label">Dátum</label>
@@ -106,7 +114,7 @@ export default function AddEvent(props) {
                     <Button variant="secondary" onClick={handleClose}>
                         Bezárás
                     </Button>
-                    <Button variant="primary" onClick={handleSubmit}>
+                    <Button variant="dark" onClick={handleSubmit}>
                         Esemény létrehozása
                     </Button>
                 </Modal.Footer>

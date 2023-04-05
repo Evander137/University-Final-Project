@@ -35,8 +35,7 @@ export default function CalendarPage(props) {
     }, [])
 
     return (
-        <div>
-            <Link to="/chat">CLICK HERE TO CHAT</Link>
+        <>
             <Calendar
                 events={events}
                 getEvents={getData}
@@ -44,6 +43,6 @@ export default function CalendarPage(props) {
                 setToken={props.setToken}
                 userId={props.userId}
             />
-        </div>
+        </>
     )
 }

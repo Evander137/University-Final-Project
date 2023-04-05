@@ -3,6 +3,7 @@ import { useState } from 'react'
 import moment from 'moment'
 import ShowAndUpdateEvent from './ShowAndUpdateEvent'
 import AddEvent from './AddEvent'
+import { Col, Row } from 'react-bootstrap'
 
 export default function Calendar(props) {
     const [dateObject, setDateObject] = useState(moment())
@@ -158,7 +159,7 @@ export default function Calendar(props) {
 
         if (showMonthTable) {
             return (
-                <table className="calendar-month">
+                <table className="calendar-month table table-bordered">
                     <thead>
                         <tr>
                             <th colSpan="4">Select a Month</th>
@@ -268,7 +269,7 @@ export default function Calendar(props) {
         })
 
         return (
-            <table className="calendar-month">
+            <table className="calendar-month table table-bordered">
                 <thead>
                     <tr>
                         <th colSpan="4">Select a Year</th>
@@ -279,33 +280,37 @@ export default function Calendar(props) {
     }
 
     return (
-        <div>
+        <>
             <div className="tail-datetime-calendar">
-                <div>
-                    <span onClick={() => { arrowOnPrev() }}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-arrow-left" viewBox="0 0 16 16">
-                            <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
-                        </svg>
-                    </span>
-                    <span onClick={() => { arrowOnNext() }}
-                        className="calendar-button button-next">
+                <Row>
+                    <Col>
+                        <span onClick={() => { arrowOnPrev() }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-arrow-left" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                            </svg>
+                        </span>
+                    </Col>
+                    <Col>
+                        <span className="calendar-label">
+                            <h1 onClick={() => {
+                                setShowYearTable(!showYearTable)
+                                setShowMonthTable(false)
+                            }
+                            }>{year()}</h1>
+                        </span>
+                    </Col>
+                    <Col>
+                        <span onClick={() => { arrowOnNext() }}
+                            className="calendar-button button-next">
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
-                            <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
-                        </svg>
-                    </span>
-                </div>
-                <div>
-                    <span className="calendar-label">
-                        <h1 onClick={() => {
-                            setShowYearTable(!showYearTable)
-                            setShowMonthTable(false)
-                        }
-                        }>{year()}</h1>
-                    </span>
-                </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                            </svg>
+                        </span>
+                    </Col>
+                </Row>
                 <div className="calendar-navi">
-                    <h1 onClick={() => {
+                    <h1 className='calendar-label' onClick={() => {
                         setShowMonthTable(!showMonthTable)
                         setShowYearTable(false)
                     }
@@ -326,6 +331,6 @@ export default function Calendar(props) {
                 setToken={props.setToken}
                 userId={props.userId}
             />
-        </div>
+        </>
     )
 }

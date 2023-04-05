@@ -27,9 +27,20 @@ ul {
 
 .calendar-day td {
   width: 150px;
-  height: 120px;
+  height: 160px;
   vertical-align: top;
   text-align: left;
+}
+
+.calendar-month td {
+  width: 175px;
+  height: 50px;
+  vertical-align: top;
+  font-size: larger;
+}
+
+.calendar-month td:hover {
+  color: rgb(80, 80, 80);
 }
 
 .leftFloat {
@@ -39,4 +50,18 @@ ul {
 .LoginMainDiv {
   background-image: url("../images/veszprem.jpg");
   background-size: cover;
+}
+
+.routerLink {
+  margin: 1rem;
+  color: white;
+  text-decoration: none;
+}
+
+.routerLink:hover {
+  color: rgb(180, 180, 180);
+}
+
+.calendar-label:hover {
+  color: rgb(80, 80, 80);
 }

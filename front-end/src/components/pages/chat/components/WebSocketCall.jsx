@@ -83,7 +83,7 @@ export default function WebSocketCall({ socket, username, userId, token, removeT
   const renderMessages = () => {
     let msgs = []
     let msgCnt = 0
-    let px = 14
+    let px = 18
     let lastMsgUserId = 0
     for (let i = 0; i < messages.length; i++) {
       if (lastMsgUserId === messages[i].userId)
@@ -100,8 +100,6 @@ export default function WebSocketCall({ socket, username, userId, token, removeT
               <Row>
                 <p>{messages[i].message}</p>
               </Row>
-              {/* <strong>{messages[i].username}</strong><p>{messages[i].datetime.format()}</p>
-              <p>{messages[i].message}</p> */}
             </li>
           </>)
       }
@@ -119,7 +117,7 @@ export default function WebSocketCall({ socket, username, userId, token, removeT
       }
       msgCnt += 1
       lastMsgUserId = messages[i].userId
-      px = 14
+      px = 18
     }
     return msgs
   }
@@ -136,9 +134,6 @@ export default function WebSocketCall({ socket, username, userId, token, removeT
               <h3 className="text-center py-3 d-inline">
                 Veszprémi Intézmények Chat
               </h3>
-              <Button onClick={e => removeToken()} variant="outline-primary">
-                Logout
-              </Button>
             </div>
             <div className="">
               <ul className="list-group" style={{ marginBottom: "60px" }}>
@@ -171,7 +166,7 @@ export default function WebSocketCall({ socket, username, userId, token, removeT
                 onChange={handleText}
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant="dark" type="submit">
               Küldés
             </Button>
           </Form>

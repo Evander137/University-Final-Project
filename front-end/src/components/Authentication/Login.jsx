@@ -78,7 +78,7 @@ function Login(props) {
                                         <label className="form-label" htmlFor="loginPassword">Jelszó</label>
                                     </div>
 
-                                    <button className="btn btn-primary btn-lg btn-block" onClick={logMeIn}>Bejelentkezés</button>
+                                    <button className="btn btn-dark btn-lg btn-block" onClick={logMeIn}>Bejelentkezés</button>
 
                                 </div>
                             </div>

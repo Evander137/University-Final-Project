@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { io } from "socket.io-client"
 // import Test from './test'
 import WebSocketCall from "./components/WebSocketCall"
+import TopNavbar from '../navbar/TopNavbar'
 
 function ChatPage(props) {
 
@@ -37,9 +38,6 @@ function ChatPage(props) {
 
     return (
         <div>
-            <div>
-                <Link to="/">CLICK HERE TO SEE THE CALENDAR</Link>
-            </div>
             <div>
                 <div className="line">
                     {!loading && <WebSocketCall removeToken={props.removeToken} socket={socketInstance} token={props.token} userId={props.userId} username={props.username} />}

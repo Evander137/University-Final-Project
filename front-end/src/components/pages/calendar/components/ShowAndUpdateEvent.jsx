@@ -88,9 +88,17 @@ export default function ShowAndUpdateEvent(props) {
                     <hr />
                     <label htmlFor="addEventType" className="form-label">Típus</label>
                     <select disabled={String(props.event.institution_id) !== String(props.userId)} defaultValue={type} id="addEventType" onChange={handleTypeChange} className="form-select form-select-sm" aria-label=".form-select-sm example">
-                        <option defaultValue="Kúltúra">Kúltúra</option>
-                        <option defaultValue="Zene">Zene</option>
+                        <option defaultValue="Kúltúra">Irodalom</option>
+                        <option defaultValue="Zene">Zene, tánc</option>
                         <option defaultValue="Képzőművészet">Képzőművészet</option>
+                        <option defaultValue="Történelem, helytörténet">Történelem, helytörténet</option>
+                        <option defaultValue="Életmód">Életmód</option>
+                        <option defaultValue="Lelki egészség, pszichológia">Lelki egészség, pszichológia</option>
+                        <option defaultValue="Társadalomtudomány">Társadalomtudomány</option>
+                        <option defaultValue="Természettudomány">Természettudomány</option>
+                        <option defaultValue="Jótékonysági programok">Jótékonysági programok</option>
+                        <option defaultValue="Gyermekprogramok">Gyermekprogramok</option>
+                        <option defaultValue="Fesztiválok">Fesztiválok</option>
                     </select>
                     <hr />
                     <label htmlFor="addEventDate" className="form-label">Dátum</label>
@@ -117,7 +125,7 @@ export default function ShowAndUpdateEvent(props) {
                     <Button variant="danger" onClick={handleDelete} disabled={String(props.event.institution_id) !== String(props.userId)}>
                         Esemény törlése
                     </Button>
-                    <Button variant="primary" onClick={handleSubmit} disabled={String(props.event.institution_id) !== String(props.userId)}>
+                    <Button variant="dark" onClick={handleSubmit} disabled={String(props.event.institution_id) !== String(props.userId)}>
                         Esemény frissítése
                     </Button>
                 </Modal.Footer>
