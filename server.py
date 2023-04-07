@@ -149,13 +149,6 @@ def get_messages():
     return jsonify(resultMessages)
 
 
-@app.route("/http-call")
-def http_call():
-    """return JSON with string data as the value"""
-    data = {'data': 'This text was fetched using an HTTP call to server on render'}
-    return jsonify(data)
-
-
 @socketio.on("connect")
 def connected():
     print(request.sid)
@@ -181,17 +174,6 @@ def handle_message(data):
 def disconnected():
     print("user disconnected")
     emit("disconnect", f"user {request.sid} disconnected", broadcast=True)
-
-
-@app.route('/profile')
-@jwt_required()
-def my_profile():
-    response_body = {
-        "name": "Nagato",
-        "about": "Hello! I'm a full stack developer that loves python and javascript"
-    }
-
-    return response_body
 
 
 if __name__ == '__main__':

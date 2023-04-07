@@ -1,10 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { io } from "socket.io-client"
-// import Test from './test'
 import WebSocketCall from "./components/WebSocketCall"
-import TopNavbar from '../navbar/TopNavbar'
 
 function ChatPage(props) {
 

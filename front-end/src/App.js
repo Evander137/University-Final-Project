@@ -1,7 +1,6 @@
 import "./App.css"
-import { useState, useEffect } from 'react'
+// import { useState, useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Profile from './components/authentication/Profile'
 import useToken from './components/authentication/useToken'
 import Login from "./components/authentication/Login"
 import ChatPage from "./components/pages/chat/ChatPage"
@@ -52,8 +51,6 @@ function App() {
                     token={token}
                   />}>
                 </Route>
-
-                <Route exact path="/profile" element={<Profile token={token} setToken={setToken} />}></Route>
               </Routes>
             </>
           )}
