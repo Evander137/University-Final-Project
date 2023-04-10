@@ -70,6 +70,13 @@ def create_token():
     return response
 
 
+# @jwt_required()
+@app.route("/getUser/<id>", methods=["GET"])
+def get_user(id):
+    user = Users.query.get(id)
+    return users_schema.jsonify(user)
+
+
 @app.route("/logout", methods=["POST"])
 def logout():
     response = jsonify({"msg": "logout successful"})

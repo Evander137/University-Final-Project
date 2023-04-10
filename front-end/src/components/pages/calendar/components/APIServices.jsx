@@ -80,4 +80,15 @@ export default class APIServices {
         })
             .then(res => res.json())
     }
+
+    static GetUser(token, id) {
+        return fetch(`http://localhost:5001/getUser/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token
+            }
+        })
+            .then(res => res.json())
+    }
 }

@@ -132,7 +132,7 @@ export default function WebSocketCall({ socket, username, userId, token, removeT
           <Container>
             <div className="d-flex align-items-center justify-content-between">
               <h3 className="text-center py-3 d-inline">
-                Veszprémi Intézmények Chat
+                Veszprémi Intézmények Üzenőfal
               </h3>
             </div>
             <div className="">

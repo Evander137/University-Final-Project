@@ -1,10 +1,29 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Modal, Button } from "react-bootstrap"
 import APIServices from "./APIServices"
+import AlertDismissible from "./AlertDismissible"
+import { ReactComponent as GyermekSvg } from '../../../../images/gyermek.svg'
+import { ReactComponent as EletmodSvg } from '../../../../images/eletmod.svg'
+import { ReactComponent as FesztivalSvg } from '../../../../images/fesztival.svg'
+import { ReactComponent as JotekonySvg } from '../../../../images/jotekony.svg'
+import { ReactComponent as IrodalomSvg } from '../../../../images/irodalom.svg'
+import { ReactComponent as KepzomuveszetSvg } from '../../../../images/kepzomuveszet.svg'
+import { ReactComponent as LelkiegeszsegSvg } from '../../../../images/lelkiegeszseg.svg'
+import { ReactComponent as TarsadalomSvg } from '../../../../images/tarsadalom.svg'
+import { ReactComponent as TermeszetSvg } from '../../../../images/termeszet.svg'
+import { ReactComponent as TortenelemSvg } from '../../../../images/tortenelem.svg'
+import { ReactComponent as ZeneSvg } from '../../../../images/zene.svg'
 
 export default function ShowAndUpdateEvent(props) {
     const [showModal, setShow] = useState(false)
 
+    const [error, setError] = useState({
+        show: false,
+        heading: "",
+        message: ""
+    })
+
+    const [id, setId] = useState(props.event.id)
     const [name, setName] = useState(props.event.name)
     const [description, setDescription] = useState(props.event.description)
     const [location, setLocation] = useState(props.event.location)
@@ -25,27 +44,104 @@ export default function ShowAndUpdateEvent(props) {
     const handleEndTimeChange = e => setEndTime(e.target.value)
     const handleFinalChange = e => setFinal(e.target.checked)
 
-    const handleSubmit = (e) => {
-        APIServices.UpdateEvent(props.event.id, {
-            "name": name,
-            "description": description,
-            "type": type,
-            "date": date,
-            "location": location,
-            "startTime": startTime,
-            "endTime": endTime,
-            "isFinal": final
-        }, props.token)
-            .then(response => {
-                console.log(response)
-                // const res = response.data
-                // res.access_token && props.setToken(res.access_token)
-                alert("Sikeresen frissítette az eseményt!")
-                props.getEvents()
-                handleClose()
-            })
-            .catch(err => console.log(err))
+    useEffect(() => {
+        setStatesToProps()
+    }, [props])
 
+    const setStatesToProps = () => {
+        setId(props.event.id)
+        setName(props.event.name)
+        setDescription(props.event.description)
+        setLocation(props.event.location)
+        setType(props.event.type)
+        setDate(props.event.date)
+        setStartTime(props.event.startTime)
+        setEndTime(props.event.endTime)
+        setFinal(props.event.isFinal)
+    }
+
+    const setErrorToEmpty = () => {
+        setError({
+            show: false,
+            heading: "Hiba",
+            message: ""
+        })
+    }
+
+    const handleSubmit = (e) => {
+        if (name !== '') {
+            if (description !== '') {
+                if (location !== '') {
+                    if (date !== '') {
+                        if (startTime !== '') {
+                            if (endTime !== '') {
+                                APIServices.UpdateEvent(id, {
+                                    "name": name,
+                                    "description": description,
+                                    "type": type,
+                                    "date": date,
+                                    "location": location,
+                                    "startTime": startTime,
+                                    "endTime": endTime,
+                                    "isFinal": final
+                                }, props.token)
+                                    .then(response => {
+                                        console.log(response)
+                                        // const res = response.data
+                                        // res.access_token && props.setToken(res.access_token)
+                                        alert("Sikeresen frissítette az eseményt!")
+                                        props.getEvents()
+                                        handleClose()
+                                    })
+                                    .catch(err => console.log(err))
+                            }
+                            else {
+                                setError({
+                                    show: true,
+                                    heading: "Hiba",
+                                    message: "Kérem adja meg az esemény várható befejezésének időpontját"
+                                })
+                            }
+                        }
+                        else {
+                            setError({
+                                show: true,
+                                heading: "Hiba",
+                                message: "Kérem adja meg az esemény kezdésének időpontját"
+                            })
+                        }
+                    }
+                    else {
+                        setError({
+                            show: true,
+                            heading: "Hiba",
+                            message: "Kérem adja meg az esemény dátumát"
+                        })
+                    }
+                }
+                else {
+                    setError({
+                        show: true,
+                        heading: "Hiba",
+                        message: "Kérem adja meg az esemény helyszínét"
+                    })
+                }
+            }
+            else {
+                setError({
+                    show: true,
+                    heading: "Hiba",
+                    message: "Kérem adja meg az esemény leírását"
+                })
+            }
+        }
+        else {
+            setError({
+                show: true,
+                heading: "Hiba",
+                message: "Kérem adjon nevet az eseménynek"
+            })
+        }
     }
 
     const handleDelete = () => {
@@ -61,14 +157,40 @@ export default function ShowAndUpdateEvent(props) {
                 .catch(err => console.log(err))
     }
 
+    const renderIcon = () => {
+        if (props.event.type === "Irodalom") return <IrodalomSvg className="svg-icon" />
+        else if (props.event.type === "Zene, tánc") return <ZeneSvg className="svg-icon" />
+        else if (props.event.type === "Képzőművészet") return <KepzomuveszetSvg className="svg-icon" />
+        else if (props.event.type === "Történelem, helytörténet") return <TortenelemSvg className="svg-icon" />
+        else if (props.event.type === "Életmód") return <EletmodSvg className="svg-icon" />
+        else if (props.event.type === "Lelki egészség, pszichológia") return <LelkiegeszsegSvg className="svg-icon" />
+        else if (props.event.type === "Társadalomtudomány") return <TarsadalomSvg className="svg-icon" />
+        else if (props.event.type === "Természettudomány") return <TermeszetSvg className="svg-icon" />
+        else if (props.event.type === "Jótékonysági programok") return <JotekonySvg className="svg-icon" />
+        else if (props.event.type === "Gyermekprogramok") return <GyermekSvg className="svg-icon" />
+        else if (props.event.type === "Fesztiválok") return <FesztivalSvg className="svg-icon" />
+    }
+
+    const getModalTitle = () => {
+        if (String(props.event.institution_id) === String(props.userId))
+            return "Esemény frissítése"
+        if (props.users) {
+            for (let i = 0; i < props.users.length; i++) {
+                if (props.event.institution_id === props.users[i].id)
+                    return props.users[i].username
+            }
+        }
+    }
+
+    const btnClassName = props.event.isFinal ? "btn btn-dark my-1" : "btn btn-dark my-1 opacity-50"
     return (
         <>
-            <div>
-                <a href="#" onClick={handleShow} className="link">{props.event.name}</a>
-            </div>
+            <button onClick={handleShow} type="button" className={btnClassName}>
+                {renderIcon()} {props.event.name}
+            </button>
             <Modal show={showModal} onHide={handleClose} backdrop="static" size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Esemény frissítése</Modal.Title>
+                    <Modal.Title>{getModalTitle()}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="mb-3">
@@ -117,6 +239,12 @@ export default function ShowAndUpdateEvent(props) {
                     <hr />
                     <label htmlFor="addEventFinal" className="form-label">Végleges-e az időpont</label>
                     <input disabled={String(props.event.institution_id) !== String(props.userId)} checked={final} onChange={handleFinalChange} id="addEventFinal" className="form-check-input" type="checkbox" />
+                    <AlertDismissible
+                        show={error.show}
+                        heading={error.heading}
+                        message={error.message}
+                        setErrorToEmpty={setErrorToEmpty}
+                    />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>

@@ -1,9 +1,16 @@
 import React, { useState } from "react"
 import { Modal, Button } from "react-bootstrap"
 import APIServices from "./APIServices"
+import AlertDismissible from "./AlertDismissible"
 
 export default function AddEvent(props) {
     const [showModal, setShow] = useState(false)
+
+    const [error, setError] = useState({
+        show: false,
+        heading: "",
+        message: ""
+    })
 
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
@@ -25,27 +32,89 @@ export default function AddEvent(props) {
     const handleEndTimeChange = e => setEndTime(e.target.value)
     const handleFinalChange = e => setFinal(e.target.checked)
 
+    const setErrorToEmpty = () => {
+        setError({
+            show: false,
+            heading: "Hiba",
+            message: ""
+        })
+    }
+
     const handleSubmit = (e) => {
-        APIServices.AddEvent({
-            "name": name,
-            "description": description,
-            "type": type,
-            "date": date,
-            "location": location,
-            "startTime": startTime,
-            "endTime": endTime,
-            "isFinal": final,
-            "institution_id": props.userId
-        }, props.token)
-            .then(response => {
-                console.log(response)
-                // const res = response.data
-                // res.access_token && props.setToken(res.access_token)
-                alert("Sikeresen létrehozta az eseményt!")
-                handleClose()
-                props.getEvents()
+        if (name !== '') {
+            if (description !== '') {
+                if (location !== '') {
+                    if (date !== '') {
+                        if (startTime !== '') {
+                            if (endTime !== '') {
+                                APIServices.AddEvent({
+                                    "name": name,
+                                    "description": description,
+                                    "type": type,
+                                    "date": date,
+                                    "location": location,
+                                    "startTime": startTime,
+                                    "endTime": endTime,
+                                    "isFinal": final,
+                                    "institution_id": props.userId
+                                }, props.token)
+                                    .then(response => {
+                                        console.log(response)
+                                        // const res = response.data
+                                        // res.access_token && props.setToken(res.access_token)
+                                        alert("Sikeresen létrehozta az eseményt!")
+                                        handleClose()
+                                        props.getEvents()
+                                    })
+                                    .catch(err => console.log(err))
+                            }
+                            else {
+                                setError({
+                                    show: true,
+                                    heading: "Hiba",
+                                    message: "Kérem adja meg az esemény várható befejezésének időpontját"
+                                })
+                            }
+                        }
+                        else {
+                            setError({
+                                show: true,
+                                heading: "Hiba",
+                                message: "Kérem adja meg az esemény kezdésének időpontját"
+                            })
+                        }
+                    }
+                    else {
+                        setError({
+                            show: true,
+                            heading: "Hiba",
+                            message: "Kérem adja meg az esemény dátumát"
+                        })
+                    }
+                }
+                else {
+                    setError({
+                        show: true,
+                        heading: "Hiba",
+                        message: "Kérem adja meg az esemény helyszínét"
+                    })
+                }
+            }
+            else {
+                setError({
+                    show: true,
+                    heading: "Hiba",
+                    message: "Kérem adja meg az esemény leírását"
+                })
+            }
+        }
+        else {
+            setError({
+                show: true,
+                heading: "Hiba",
+                message: "Kérem adjon nevet az eseménynek"
             })
-            .catch(err => console.log(err))
+        }
     }
 
     return (
@@ -109,6 +178,12 @@ export default function AddEvent(props) {
                     <hr />
                     <label htmlFor="addEventFinal" className="form-label">Végleges-e az időpont</label>
                     <input checked={final} onChange={handleFinalChange} id="addEventFinal" className="form-check-input" type="checkbox" />
+                    <AlertDismissible
+                        show={error.show}
+                        heading={error.heading}
+                        message={error.message}
+                        setErrorToEmpty={setErrorToEmpty}
+                    />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>

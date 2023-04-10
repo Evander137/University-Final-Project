@@ -3,9 +3,19 @@ import { useState, useEffect } from 'react'
 import axios from "axios"
 import { Link } from 'react-router-dom'
 import Calendar from './components/Calendar'
+import APIServices from "../calendar/components/APIServices"
 
 export default function CalendarPage(props) {
     const [events, setEvents] = useState(null)
+    const [users, setUsers] = useState(null)
+
+    const getUsers = () => {
+        APIServices.GetUsers(props.token)
+            .then(response => {
+                setUsers(response)
+            })
+            .catch(err => console.log(err))
+    }
 
     function getData() {
         axios({
@@ -16,10 +26,7 @@ export default function CalendarPage(props) {
             }
         })
             .then((response) => {
-                console.log(response)
                 const res = response.data
-                // console.log(res)
-                // res.access_token && props.setToken(res.access_token)
                 setEvents(res)
             }).catch((error) => {
                 if (error.response) {
@@ -32,12 +39,14 @@ export default function CalendarPage(props) {
 
     useEffect(() => {
         getData()
+        getUsers()
     }, [])
 
     return (
         <>
             <Calendar
                 events={events}
+                users={users}
                 getEvents={getData}
                 token={props.token}
                 setToken={props.setToken}

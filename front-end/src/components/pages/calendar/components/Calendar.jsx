@@ -65,6 +65,33 @@ export default function Calendar(props) {
         }
     }
 
+    const sortEventsByStartTime = (events) => {
+        // console.log(events)
+        let min
+        for (let i = 0; i < events.length; i++) {
+            //index of the smallest element to be the ith element.
+            min = i
+
+            //Check through the rest of the array for a lesser element
+            for (let j = i + 1; j < events.length; j++) {
+                if (parseInt(events[j].startTime.split(':')[0]) < parseInt(events[min].startTime.split(':')[0]))
+                    min = j
+                else if (parseInt(events[j].startTime.split(':')[0]) === parseInt(events[min].startTime.split(':')[0])) {
+                    if (parseInt(events[j].startTime.split(':')[1]) < parseInt(events[min].startTime.split(':')[1]))
+                        min = j
+                }
+            }
+
+            //compare the indexes
+            if (min !== i) {
+                //swap
+                [events[i], events[min]] = [events[min], events[i]]
+            }
+        }
+
+        return events
+    }
+
     const renderDays = () => {
         let blanks = []
         for (let i = 0; i < firstDayOfMonth(); i++) {
@@ -74,9 +101,9 @@ export default function Calendar(props) {
         }
         let days = []
         const currentDate = moment()
-        // console.log(dateObject)
         for (let d = 1; d <= daysInMonth(); d++) {
             if (props.events !== null) {
+                let dailyEventComponents = []
                 let dailyEvents = []
                 for (let i = 0; i < props.events.length; i++) {
                     let month = "";
@@ -85,19 +112,24 @@ export default function Calendar(props) {
                     d <= 9 ? day = "0" + d : day = d
                     let dateString = dateObject.year() + "-" + month + "-" + day
                     if (props.events[i].date.toString() === dateString.toString()) {
-                        dailyEvents.push(
-                            <>
-                                <ShowAndUpdateEvent
-                                    event={props.events[i]}
-                                    userId={props.userId}
-                                    getEvents={props.getEvents}
-                                    token={props.token}
-                                    setToken={props.setToken}
-                                />
-                            </>)
+                        dailyEvents.push(props.events[i])
                     }
                 }
-                days.push(renderDay(dailyEvents, d, currentDate))
+                dailyEvents = sortEventsByStartTime(dailyEvents)
+                for (let i = 0; i < dailyEvents.length; i++) {
+                    dailyEventComponents.push(
+                        <>
+                            <ShowAndUpdateEvent
+                                event={dailyEvents[i]}
+                                users={props.users}
+                                userId={props.userId}
+                                getEvents={props.getEvents}
+                                token={props.token}
+                                setToken={props.setToken}
+                            />
+                        </>)
+                }
+                days.push(renderDay(dailyEventComponents, d, currentDate))
             }
         }
 
@@ -284,7 +316,7 @@ export default function Calendar(props) {
             <div className="tail-datetime-calendar">
                 <Row>
                     <Col>
-                        <span onClick={() => { arrowOnPrev() }}>
+                        <span className='calendar-arrow mt-5' onClick={() => { arrowOnPrev() }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-arrow-left" viewBox="0 0 16 16">
                                 <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
                             </svg>
@@ -301,7 +333,7 @@ export default function Calendar(props) {
                     </Col>
                     <Col>
                         <span onClick={() => { arrowOnNext() }}
-                            className="calendar-button button-next">
+                            className="calendar-arrow mt-5">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
                                 <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />

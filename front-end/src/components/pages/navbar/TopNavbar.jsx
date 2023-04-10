@@ -14,11 +14,11 @@ export default function TopNavbar(props) {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Link to="/" className='routerLink mx-5'>Naptár</Link>
-                        <Link to="/chat" className='routerLink mx-5'>Chat</Link>
+                        <Link to="/chat" className='routerLink mx-5'>Üzenőfal</Link>
                     </Nav>
                     <Nav className="justify-content-end" activeKey="/home">
                         <Nav.Item>
-                            <button class="btn btn-sm btn-outline-danger" onClick={props.removeToken} type="button">Kijelentkezés</button>
+                            <button className="btn btn-sm btn-outline-danger" onClick={props.removeToken} type="button">Kijelentkezés</button>
                         </Nav.Item>
                     </Nav>
                 </Navbar.Collapse>
