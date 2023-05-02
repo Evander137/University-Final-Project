@@ -72,6 +72,17 @@ ul {
   filter: invert(95%) sepia(0%) saturate(9%) hue-rotate(198deg) brightness(112%) contrast(103%);
 }
 
+.setting-icon {
+  width: 26px;
+  height: 26px;
+  filter: invert(95%) sepia(0%) saturate(9%) hue-rotate(198deg) brightness(112%) contrast(103%);
+}
+
+.setting-icon:hover {
+  filter: invert(62%) sepia(48%) saturate(0%) hue-rotate(228deg) brightness(111%) contrast(79%);
+}
+
+
 .calendar-arrow:hover {
   filter: invert(26%) sepia(80%) saturate(0%) hue-rotate(356deg) brightness(95%) contrast(87%);
 }

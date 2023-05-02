@@ -134,17 +134,17 @@ export default function AddEvent(props) {
                 <Modal.Body>
                     <div className="mb-3">
                         <label htmlFor="addEventName" className="form-label">Név</label>
-                        <input value={name} onChange={handleNameChange} type="text" className="form-control" id="addEventName" placeholder="" />
+                        <input value={name} onChange={handleNameChange} type="text" className="form-control" maxLength={100} id="addEventName" placeholder="" />
                     </div>
                     <hr />
                     <div className="mb-3">
                         <label htmlFor="addEventDescription" className="form-label">Leírás</label>
-                        <textarea value={description} onChange={handleDescriptionChange} className="form-control" id="addEventDescription" rows="3"></textarea>
+                        <textarea value={description} onChange={handleDescriptionChange} className="form-control" maxLength={1000} id="addEventDescription" rows="3"></textarea>
                     </div>
                     <hr />
                     <div className="mb-3">
                         <label htmlFor="addEventLocation" className="form-label">Helyszín</label>
-                        <input value={location} onChange={handleLocationChange} type="text" className="form-control" id="addEventLocation" placeholder="" />
+                        <input value={location} onChange={handleLocationChange} type="text" className="form-control" maxLength={100} id="addEventLocation" placeholder="" />
                     </div>
                     <hr />
                     <label htmlFor="addEventType" className="form-label">Típus</label>
