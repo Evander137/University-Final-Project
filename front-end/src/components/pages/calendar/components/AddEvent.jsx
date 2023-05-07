@@ -6,12 +6,6 @@ import AlertDismissible from "./AlertDismissible"
 export default function AddEvent(props) {
     const [showModal, setShow] = useState(false)
 
-    const [error, setError] = useState({
-        show: false,
-        heading: "",
-        message: ""
-    })
-
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const [location, setLocation] = useState("")
@@ -23,14 +17,22 @@ export default function AddEvent(props) {
 
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
+
     const handleNameChange = e => setName(e.target.value)
     const handleDescriptionChange = e => setDescription(e.target.value)
     const handleLocationChange = e => setLocation(e.target.value)
     const handleTypeChange = e => setType(e.target.value)
     const handleDateChange = e => setDate(e.target.value)
-    const handleStartTimeChange = (e) => { setStartTime(e.target.value) }
+    const handleStartTimeChange = e => setStartTime(e.target.value)
     const handleEndTimeChange = e => setEndTime(e.target.value)
     const handleFinalChange = e => setFinal(e.target.checked)
+
+
+    const [error, setError] = useState({
+        show: false,
+        heading: "",
+        message: ""
+    })
 
     const setErrorToEmpty = () => {
         setError({
@@ -119,10 +121,7 @@ export default function AddEvent(props) {
 
     return (
         <>
-            <div
-            // className="d-flex align-items-center justify-content-center"
-            // style={{ height: "100vh" }}
-            >
+            <div>
                 <Button variant="dark" onClick={handleShow} className="mb-4 mt-2">
                     Új esemény létrehozása
                 </Button>
@@ -134,7 +133,7 @@ export default function AddEvent(props) {
                 <Modal.Body>
                     <div className="mb-3">
                         <label htmlFor="addEventName" className="form-label">Név</label>
-                        <input value={name} onChange={handleNameChange} type="text" className="form-control" maxLength={100} id="addEventName" placeholder="" />
+                        <input value={name} onChange={handleNameChange} type="text" className="form-control" maxLength={100} id="addEventName" />
                     </div>
                     <hr />
                     <div className="mb-3">

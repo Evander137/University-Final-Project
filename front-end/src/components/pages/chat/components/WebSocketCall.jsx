@@ -71,7 +71,13 @@ export default function WebSocketCall({ socket, username, userId, token, removeT
 
   useEffect(() => {
     socket.on("data", (data) => {
-      setMessages([...messages, { userId: data.userId, username: data.username, message: data.message, datetime: moment() }])
+      setMessages([...messages,
+      {
+        userId: data.userId,
+        username: data.username,
+        message: data.message,
+        datetime: moment()
+      }])
     })
     return () => {
       socket.off("data", () => {
@@ -137,10 +143,6 @@ export default function WebSocketCall({ socket, username, userId, token, removeT
             </div>
             <div className="">
               <ul className="list-group" style={{ marginBottom: "60px" }}>
-                {/* <li className="w-100 list-group-item" style={{ backgroundColor: "lightblue" }} key={uuid()}>
-                  <strong>Test User</strong>
-                  <p>Hello everybody</p>
-                </li> */}
                 {renderMessages()}
               </ul>
             </div>
